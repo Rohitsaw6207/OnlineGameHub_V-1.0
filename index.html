@@ -1,156 +1,517 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!--=============== CSS ===============-->
-    <link rel="stylesheet" href="style.css">
-    
-    <!-- Favicon -->
-    <link rel="icon" href="assets/images/favicon.png" type="image/png">
+    <meta name="description" content="Play free online games against computer or in local multiplayer mode. Enjoy Tic Tac Toe, Chess, Snake Game and more!">
+    <title>🎮 Online Game Hub</title>
+    <style>
+        :root {
+            --primary-color: #4527a0;
+            --secondary-color: #7c4dff;
+            --accent-color: #ff6d00;
+            --bg-dark: #121212;
+            --text-light: #f5f5f5;
+            --card-bg: rgba(255, 255, 255, 0.08);
+            --card-hover: rgba(255, 255, 255, 0.12);
+        }
 
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    <title>Game Hub</title>
+        body, html {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Background Animation */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background-color: rgba(124, 77, 255, 0.2);
+            border-radius: 50%;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 0.2;
+            }
+            25% {
+                opacity: 0.3;
+            }
+            50% {
+                transform: translateY(-150px) translateX(100px) rotate(180deg);
+                opacity: 0.2;
+            }
+            75% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(0) translateX(0) rotate(360deg);
+                opacity: 0.2;
+            }
+        }
+
+        /* Header Styles */
+        header {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: linear-gradient(to right, #2a1956, #372171);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            margin-right: 0.5rem;
+        }
+
+        .site-title {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(to right, #7c4dff, #ff6d00);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px rgba(124, 77, 255, 0.3), 0 0 10px rgba(124, 77, 255, 0.3);
+            }
+            to {
+                text-shadow: 0 0 10px rgba(124, 77, 255, 0.5), 0 0 20px rgba(124, 77, 255, 0.5);
+            }
+        }
+
+        /* Ad Block Styles */
+        .ad-block {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            overflow: hidden;
+        }
+
+        .ad-header {
+            width: 100%;
+            max-width: 728px;
+            height: 90px;
+            margin: 1.5rem auto;
+        }
+
+        .ad-middle {
+            width: 100%;
+            max-width: 728px;
+            height: 90px;
+            margin: 2rem auto;
+            grid-column: 1 / -1;
+        }
+
+        .ad-sidebar {
+            width: 100%;
+            max-width: 300px;
+            height: 250px;
+            margin: 1rem auto;
+        }
+
+        .ad-footer {
+            width: 100%;
+            max-width: 728px;
+            height: 90px;
+            margin: 1rem auto 2rem;
+        }
+
+        /* Main Content Styles */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .game-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .game-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            background-color: var(--card-hover);
+        }
+
+        .game-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .game-content {
+            padding: 1.2rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .game-title {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+
+        .game-mode {
+            font-size: 0.9rem;
+            color: var(--secondary-color);
+            margin-bottom: 0.8rem;
+        }
+
+        .game-description {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.4;
+            margin-bottom: 1rem;
+            flex-grow: 1;
+        }
+
+        .play-btn {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .play-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(124, 77, 255, 0.4);
+            background: linear-gradient(to right, #5533c0, #8d66ff);
+        }
+
+        .play-icon {
+            margin-right: 0.5rem;
+        }
+
+        /* Footer Styles */
+        footer {
+            background: linear-gradient(to right, #2a1956, #372171);
+            padding: 2rem 1rem;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .social-link {
+            color: var(--text-light);
+            font-size: 1.2rem;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .social-link:hover {
+            color: var(--accent-color);
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+            text-align: center;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .site-title {
+                font-size: 1.8rem;
+            }
+
+            .games-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            .site-title {
+                font-size: 1.5rem;
+            }
+
+            .logo {
+                font-size: 2rem;
+            }
+
+            .ad-header, .ad-middle, .ad-footer {
+                height: 70px;
+            }
+        }
+    </style>
 </head>
 <body>
-   <header>
+    <!-- Background Animation -->
+    <div class="animated-bg" id="animated-background"></div>
 
-   </header>
+    <!-- Header Section -->
+    <header>
+        <div class="logo-container">
+            <div class="logo">🎮</div>
+            <h1 class="site-title">Online Game Hub</h1>
+        </div>
+    </header>
 
-    <div class="container">
-        <div class="card__container">
-            <!-- First Card -->
-            <article class="card__article">
-                <img src="assets/images/logo.png" alt="image" class="card__img">
-                <div class="card__data">
-                    <span class="card__description">Vancouver Mountains, Canada</span>
-                    <h2 class="card__title">The Great Path</h2>
-                    <a href="#" class="card__button">Read More</a>
+    <!-- Top Ad Block -->
+    <div class="ad-block ad-header">
+        Advertisement Space
+    </div>
+
+    <main>
+        <div class="games-grid">
+            <!-- Game 1: Tic Tac Toe -->
+            <div class="game-card">
+                <div class="game-img">❌⭕</div>
+                <div class="game-content">
+                    <h2 class="game-title">Tic Tac Toe</h2>
+                    <p class="game-mode">vs Computer</p>
+                    <p class="game-description">Classic game of X's and O's. Be the first to get three in a row to win!</p>
+                    <button class="play-btn"><a href="Games\Tic Tac Toe\index.html"><span class="play-icon">▶️</span></a> Play Now</button>
                 </div>
-            </article>
-
-            <!-- Google AdSense Ad (First Ad) -->
-            <div class="ad__container">
-                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-XXXXXXX"  <!-- Replace with your AdSense publisher ID -->
-                     data-ad-slot="XXXXXXX"           <!-- Replace with your AdSlot ID -->
-                     data-ad-format="auto"></ins>
-                <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
             </div>
 
-            <!-- Second Card -->
-            <article class="card__article">
-                <img src="assets/images/logo.png" alt="image" class="card__img">
-                <div class="card__data">
-                    <span class="card__description">Poon Hill, Nepal</span>
-                    <h2 class="card__title">Starry Night</h2>
-                    <a href="#" class="card__button">Read More</a>
+            <!-- Game 2: Snake Game -->
+            <div class="game-card">
+                <div class="game-img">🐍</div>
+                <div class="game-content">
+                    <h2 class="game-title">Snake Game</h2>
+                    <p class="game-mode">vs Computer</p>
+                    <p class="game-description">Control the snake, eat food, and grow longer without hitting the walls or yourself.</p>
+                    <button class="play-btn"><span class="play-icon">▶️</span> Play Now</button>
                 </div>
-            </article>
-
-            <!-- Google AdSense Ad (Second Ad) -->
-            <div class="ad__container">
-                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-XXXXXXX"
-                     data-ad-slot="XXXXXXX"
-                     data-ad-format="auto"></ins>
-                <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
             </div>
 
-            <!-- Third Card -->
-            <article class="card__article">
-                <img src="assets/images/logo.png" alt="image" class="card__img">
-                <div class="card__data">
-                    <span class="card__description">Bojcin Forest, Serbia</span>
-                    <h2 class="card__title">Path Of Peace</h2>
-                    <a href="#" class="card__button">Read More</a>
+            <!-- Game 3: Rock Paper Scissors -->
+            <div class="game-card">
+                <div class="game-img">✂️</div>
+                <div class="game-content">
+                    <h2 class="game-title">Rock Paper Scissors</h2>
+                    <p class="game-mode">vs Computer</p>
+                    <p class="game-description">Test your luck against the computer in this classic hand game.</p>
+                    <button class="play-btn"><span class="play-icon">▶️</span> Play Now</button>
                 </div>
-            </article>
-
-            <!-- Google AdSense Ad (Third Ad) -->
-            <div class="ad__container">
-                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-XXXXXXX"
-                     data-ad-slot="XXXXXXX"
-                     data-ad-format="auto"></ins>
-                <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
             </div>
 
-            <!-- Fourth Card -->
-            <article class="card__article">
-                <img src="assets/images/logo.png" alt="image" class="card__img">
-                <div class="card__data">
-                    <span class="card__description">Bojcin Forest, Serbia</span>
-                    <h2 class="card__title">Path Of Peace</h2>
-                    <a href="#" class="card__button">Read More</a>
-                </div>
-            </article>
+            <!-- Middle Ad Block -->
+            <div class="ad-block ad-middle">
+                Advertisement Space
+            </div>
 
-            <!-- Google AdSense Ad (Fourth Ad) -->
-            <div class="ad__container">
-                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-XXXXXXX"
-                     data-ad-slot="XXXXXXX"
-                     data-ad-format="auto"></ins>
-                <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
+            <!-- Game 4: Chess -->
+            <div class="game-card">
+                <div class="game-img">♟️</div>
+                <div class="game-content">
+                    <h2 class="game-title">Chess</h2>
+                    <p class="game-mode">vs Computer</p>
+                    <p class="game-description">Strategic board game where you must outthink your opponent to capture their king.</p>
+                    <button class="play-btn"><span class="play-icon">▶️</span> Play Now</button>
+                </div>
+            </div>
+
+            <!-- Game 5: Puzzle Game -->
+            <div class="game-card">
+                <div class="game-img">🧩</div>
+                <div class="game-content">
+                    <h2 class="game-title">Puzzle Game</h2>
+                    <p class="game-mode">vs Computer</p>
+                    <p class="game-description">Challenge your mind with various puzzles and brain teasers.</p>
+                    <button class="play-btn"><span class="play-icon">▶️</span> Play Now</button>
+                </div>
+            </div>
+
+            <!-- Game 6: Hangman -->
+            <div class="game-card">
+                <div class="game-img">📝</div>
+                <div class="game-content">
+                    <h2 class="game-title">Hangman</h2>
+                    <p class="game-mode">vs Computer</p>
+                    <p class="game-description">Guess the word one letter at a time before the hangman is complete.</p>
+                    <button class="play-btn"><span class="play-icon">▶️</span> Play Now</button>
+                </div>
+            </div>
+
+            <!-- Game 7: Card Game -->
+            <div class="game-card">
+                <div class="game-img">🃏</div>
+                <div class="game-content">
+                    <h2 class="game-title">Card Game</h2>
+                    <p class="game-mode">vs Computer</p>
+                    <p class="game-description">Play various card games against the computer with different difficulty levels.</p>
+                    <button class="play-btn"><span class="play-icon">▶️</span> Play Now</button>
+                </div>
+            </div>
+
+            <!-- Sidebar Ad Block -->
+            <div class="ad-block ad-sidebar">
+                Advertisement Space
+            </div>
+
+            <!-- Game 8: Connect Four -->
+            <div class="game-card">
+                <div class="game-img">🔢</div>
+                <div class="game-content">
+                    <h2 class="game-title">Connect Four</h2>
+                    <p class="game-mode">Local Multiplayer</p>
+                    <p class="game-description">Drop discs to connect four of your color vertically, horizontally, or diagonally.</p>
+                    <button class="play-btn"><span class="play-icon">▶️</span> Play Now</button>
+                </div>
+            </div>
+
+            <!-- Game 9: Memory Match -->
+            <div class="game-card">
+                <div class="game-img">🎴</div>
+                <div class="game-content">
+                    <h2 class="game-title">Memory Match</h2>
+                    <p class="game-mode">vs Computer</p>
+                    <p class="game-description">Test your memory by matching pairs of cards in this classic memory game.</p>
+                    <button class="play-btn"><span class="play-icon">▶️</span> Play Now</button>
+                </div>
+            </div>
+
+            <!-- Game 10: Word Search -->
+            <div class="game-card">
+                <div class="game-img">🔤</div>
+                <div class="game-content">
+                    <h2 class="game-title">Word Search</h2>
+                    <p class="game-mode">vs Computer</p>
+                    <p class="game-description">Find hidden words in a grid of letters. Challenge your vocabulary skills!</p>
+                    <button class="play-btn"><span class="play-icon">▶️</span> Play Now</button>
+                </div>
+            </div>
+
+            <!-- Sidebar Ad Block -->
+            <div class="ad-block ad-sidebar">
+                Advertisement Space
             </div>
         </div>
+    </main>
+
+    <!-- Footer Ad Block -->
+    <div class="ad-block ad-footer">
+        Advertisement Space
     </div>
 
-    <!-- Animated Circles -->
-    <ul class="circles">
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-    </ul>
+    <!-- Footer Section -->
+    <footer>
+        <div class="footer-content">
+            <div class="social-links">
+                <a href="https://github.com/" class="social-link" aria-label="GitHub">GitHub</a>
+                <a href="https://linkedin.com/" class="social-link" aria-label="LinkedIn">LinkedIn</a>
+                <a href="mailto:rohitku6207@gmail.com" class="social-link" aria-label="Email">Email</a>
+            </div>
+            <p class="copyright">© 2023 Online Game Hub. All rights reserved.</p>
+        </div>
+    </footer>
 
-    <!-- Footer -->
-<footer>
-  <div class="footer__content">
-    <img src="assets/images/logo.png" alt="logo" class="footer__logo">
-    
-    <div class="footer__text-icons">
-      <span class="footer__text">Developed by Rohit</span>
-      <div class="social-icons">
-        <a href="mailto:rohitku6207@gmail.com" class="social-icon" title="Gmail">
-          <i class="fas fa-envelope"></i>
-        </a>
-        <a href="https://github.com/rohitku6207" class="social-icon" title="GitHub">
-          <i class="fab fa-github"></i>
-        </a>
-        <a href="https://www.linkedin.com/in/rohitku6207" class="social-icon" title="LinkedIn">
-          <i class="fab fa-linkedin"></i>
-        </a>
-      </div>
-    </div>
-  </div>
-</footer>
-
+    <script>
+        // Create animated background particles
+        const createParticles = () => {
+            const bg = document.getElementById('animated-background');
+            const numberOfParticles = 15;
+            
+            for (let i = 0; i < numberOfParticles; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random size
+                const size = Math.random() * 50 + 20;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Random position
+                particle.style.left = `${Math.random() * 100}vw`;
+                particle.style.top = `${Math.random() * 100}vh`;
+                
+                // Random animation delay
+                particle.style.animationDelay = `${Math.random() * 10}s`;
+                
+                bg.appendChild(particle);
+            }
+        };
+        
+        // Initialize particles on page load
+        document.addEventListener('DOMContentLoaded', createParticles);
+        
+        // Add hover effect to game cards
+        const gameCards = document.querySelectorAll('.game-card');
+        gameCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'scale(1.02)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'scale(1)';
+            });
+        });
+    </script>
 </body>
 </html>
