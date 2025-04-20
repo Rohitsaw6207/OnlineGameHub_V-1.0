@@ -1,0 +1,1155 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess vs Computer</title>
+    <!-- Chess.js for game rules and validation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+    
+    <style>
+        /* Global Styles */
+        :root {
+            --bg-color: #0a0e17;
+            --primary-color: #0ff;
+            --secondary-color: #f0f;
+            --board-light: #ffffff;
+            --board-dark: #000000;
+            --text-color: #fff;
+            --shadow-color: rgba(0, 255, 255, 0.3);
+            --glass-bg: rgba(20, 25, 35, 0.7);
+            --glass-border: rgba(0, 255, 255, 0.2);
+            --modal-bg: rgba(10, 14, 23, 0.9);
+            --overlay-bg: rgba(0, 0, 0, 0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 95%;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 1;
+            flex: 1;
+        }
+
+        /* Glowing Title */
+        .title {
+            font-size: 2.5rem;
+            margin: 1rem 0;
+            text-align: center;
+            color: var(--text-color);
+            text-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color);
+            animation: pulse 2s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% {
+                text-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color);
+            }
+            100% {
+                text-shadow: 0 0 15px var(--primary-color), 0 0 30px var(--primary-color), 0 0 40px var(--primary-color);
+            }
+        }
+
+        /* Ad Containers */
+        .ad-container {
+            width: 100%;
+            height: 90px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 0 15px var(--shadow-color);
+            transition: all 0.3s ease;
+        }
+
+        .ad-container:hover {
+            box-shadow: 0 0 20px var(--shadow-color);
+            transform: translateY(-2px);
+        }
+
+        .ad-label {
+            position: absolute;
+            top: 5px;
+            left: 10px;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Game Controls */
+        .game-controls {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            width: 100%;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            padding: 10px 20px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.1);
+            font-size: 0.9rem;
+        }
+
+        .control-btn:hover {
+            background: rgba(0, 255, 255, 0.15);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+        }
+
+        select.control-btn {
+            appearance: none;
+            padding-right: 30px;
+            background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+        }
+
+        /* Chessboard */
+        .board-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .chessboard {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(8, 1fr);
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            border: 2px solid #000;
+        }
+
+        .square {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .square.light {
+            background-color: var(--board-light);
+        }
+
+        .square.dark {
+            background-color: var(--board-dark);
+        }
+
+        .square.selected {
+            box-shadow: inset 0 0 20px var(--primary-color);
+        }
+
+        .square.valid-move {
+            position: relative;
+        }
+
+        .square.valid-move::after {
+            content: '';
+            position: absolute;
+            width: 30%;
+            height: 30%;
+            background-color: rgba(0, 255, 255, 0.3);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        /* Chess Pieces */
+        .piece {
+            width: 80%;
+            height: 80%;
+            position: relative;
+            z-index: 2;
+            cursor: grab;
+            transition: transform 0.2s ease, filter 0.2s ease;
+        }
+
+        .piece:hover {
+            transform: scale(1.05);
+        }
+
+        .piece.white {
+            filter: drop-shadow(0 0 5px rgba(0, 255, 255, 0.7));
+        }
+
+        .piece.black {
+            filter: drop-shadow(0 0 5px var(--secondary-color));
+        }
+
+        .piece.dragging {
+            opacity: 0.6;
+            cursor: grabbing;
+        }
+
+        /* Animation keyframes removed */
+
+        /* Game Status */
+        .game-status {
+            width: 100%;
+            margin: 20px 0;
+            padding: 15px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 15px var(--shadow-color);
+        }
+
+        #status-text {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            text-shadow: 0 0 5px var(--primary-color);
+        }
+
+        .captured-pieces {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .captured-section {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .captured-section .pieces {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            justify-content: center;
+            margin-top: 10px;
+            min-height: 40px;
+        }
+
+        .captured-section .pieces img {
+            width: 30px;
+            height: 30px;
+            opacity: 0.7;
+        }
+
+        /* Footer */
+        .footer {
+            width: 100%;
+            padding: 15px 30px;
+            background: var(--glass-bg);
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+            margin-top: 30px;
+        }
+
+        .footer p {
+            font-size: 0.9rem;
+            color: var(--text-color);
+            text-shadow: 0 0 5px var(--primary-color);
+        }
+
+        .footer-left, .footer-center, .footer-right {
+            flex: 1;
+            display: flex;
+        }
+
+        .footer-left {
+            justify-content: flex-start;
+        }
+
+        .footer-center {
+            justify-content: center;
+            text-align: center;
+        }
+
+        .footer-right {
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        .social-icon {
+            display: inline-flex;
+            width: 35px;
+            height: 35px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+
+        .social-icon svg {
+            width: 20px;
+            height: 20px;
+            fill: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 15px var(--primary-color);
+        }
+
+        .social-icon.github:hover {
+            box-shadow: 0 0 15px var(--primary-color);
+        }
+
+        .social-icon.linkedin:hover {
+            box-shadow: 0 0 15px #0077b5;
+        }
+
+        .social-icon.gmail:hover {
+            box-shadow: 0 0 15px #ea4335;
+        }
+
+        /* Background particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Game over styles */
+        .chessboard.game-over {
+            filter: grayscale(1);
+            transition: filter 0.5s ease;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--overlay-bg);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .modal-content {
+            background: var(--glass-bg);
+            border: 2px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 0 30px var(--shadow-color);
+            backdrop-filter: blur(10px);
+            transform: translateY(-20px);
+            animation: modalSlideIn 0.4s forwards;
+        }
+
+        .modal-content h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px var(--primary-color);
+        }
+
+        .modal-content p {
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes modalSlideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 1.8rem;
+            }
+            
+            .footer {
+                flex-direction: column;
+                gap: 10px;
+                padding: 15px;
+            }
+            
+            .footer-left, .footer-center, .footer-right {
+                justify-content: center;
+                width: 100%;
+                margin: 5px 0;
+            }
+            
+            .game-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .control-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .ad-container {
+                height: 70px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+                width: 100%;
+            }
+            
+            .title {
+                font-size: 1.5rem;
+            }
+            
+            .captured-pieces {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">♛ Chess vs Computer ♚</h1>
+        
+        <!-- Top Ad Block -->
+        <div class="ad-container top-ad">
+            <div class="ad-label">Ad</div>
+        </div>
+        
+        <div class="game-controls">
+            <button id="restart-btn" class="control-btn">Restart Game</button>
+            <button id="undo-btn" class="control-btn">Undo Move</button>
+            <select id="difficulty" class="control-btn">
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+            </select>
+        </div>
+        
+        <div class="board-container">
+            <div id="board" class="chessboard"></div>
+        </div>
+        
+        <div class="game-status">
+            <p id="status-text">Your turn! White moves first.</p>
+            <div class="captured-pieces">
+                <div id="captured-white" class="captured-section">
+                    <p>Captured White:</p>
+                    <div class="pieces"></div>
+                </div>
+                <div id="captured-black" class="captured-section">
+                    <p>Captured Black:</p>
+                    <div class="pieces"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bottom Ad Block -->
+        <div class="ad-container bottom-ad">
+            <div class="ad-label">Ad</div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-left">
+            <p>👨‍💻 Developed by Rohit</p>
+        </div>
+        <div class="footer-center">
+            <p>© All Rights Reserved</p>
+        </div>
+        <div class="footer-right">
+            <a href="#" class="social-icon github" aria-label="GitHub">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            </a>
+            <a href="#" class="social-icon linkedin" aria-label="LinkedIn">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+            </a>
+            <a href="#" class="social-icon gmail" aria-label="Gmail">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.021 17.824c-3.907 0-6.021-2.438-6.021-5.586 0-3.363 2.381-6.062 6.638-6.062 3.107 0 5.362 2.019 5.362 4.801 0 4.356-5.165 5.506-4.906 3.021-.354.555-.927 1.177-2.026 1.177-1.257 0-2.04-.92-2.04-2.403 0-2.222 1.461-4.1 3.19-4.1.829 0 1.399.438 1.638 1.11l.232-.816h1.169c-.122.416-1.161 4.264-1.161 4.264-.323 1.333.675 1.356 1.562.648 1.665-1.29 1.75-4.664-.499-6.071-2.411-1.445-7.897-.551-7.897 4.347 0 2.806 1.976 4.691 4.914 4.691 1.719 0 2.771-.465 3.648-.974l.588.849c-.856.482-2.231 1.104-4.391 1.104zm-1.172-7.153c-.357.67-.588 1.538-.588 2.212 0 .493.205.751.63.751 1.079 0 2.063-3.093 2.063-3.093 0-.492-.341-.907-.784-.907-.742 0-1.149.435-1.321 1.037z"/></svg>
+            </a>
+        </div>
+    </footer>
+    
+    <!-- Background particles -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Game End Modal -->
+    <div class="modal" id="gameEndModal">
+        <div class="modal-content">
+            <h2 id="modal-title">Game Over</h2>
+            <p id="modal-message"></p>
+            <button id="modal-close-btn" class="control-btn">Close</button>
+        </div>
+    </div>
+    
+    <script>
+        // Initialize the chess game using chess.js
+        const chess = new Chess();
+
+        // DOM elements
+        const boardElement = document.getElementById('board');
+        const statusText = document.getElementById('status-text');
+        const restartBtn = document.getElementById('restart-btn');
+        const undoBtn = document.getElementById('undo-btn');
+        const difficultySelect = document.getElementById('difficulty');
+        const capturedWhiteContainer = document.querySelector('#captured-white .pieces');
+        const capturedBlackContainer = document.querySelector('#captured-black .pieces');
+        const modal = document.getElementById('gameEndModal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalMessage = document.getElementById('modal-message');
+        const modalCloseBtn = document.getElementById('modal-close-btn');
+
+        // Game state
+        let selectedSquare = null;
+        let playerColor = 'w';
+        let isAnimating = false;
+        let isGameOver = false;
+        const capturedPieces = {
+            w: [],
+            b: []
+        };
+
+        // Piece images mapping
+        const pieceImages = {
+            'wp': 'https://images.chesscomfiles.com/chess-themes/pieces/neo/150/wp.png',
+            'wn': 'https://images.chesscomfiles.com/chess-themes/pieces/neo/150/wn.png',
+            'wb': 'https://images.chesscomfiles.com/chess-themes/pieces/neo/150/wb.png',
+            'wr': 'https://images.chesscomfiles.com/chess-themes/pieces/neo/150/wr.png',
+            'wq': 'https://images.chesscomfiles.com/chess-themes/pieces/neo/150/wq.png',
+            'wk': 'https://images.chesscomfiles.com/chess-themes/pieces/neo/150/wk.png',
+            'bp': 'https://images.chesscomfiles.com/chess-themes/pieces/neo/150/bp.png',
+            'bn': 'https://images.chesscomfiles.com/chess-themes/pieces/neo/150/bn.png',
+            'bb': 'https://images.chesscomfiles.com/chess-themes/pieces/neo/150/bb.png',
+            'br': 'https://images.chesscomfiles.com/chess-themes/pieces/neo/150/br.png',
+            'bq': 'https://images.chesscomfiles.com/chess-themes/pieces/neo/150/bq.png',
+            'bk': 'https://images.chesscomfiles.com/chess-themes/pieces/neo/150/bk.png'
+        };
+
+        // Initialize the board
+        function initializeBoard() {
+            boardElement.innerHTML = '';
+            const files = 'abcdefgh';
+            const ranks = '87654321'; 
+
+            // Create squares
+            for (let r = 0; r < 8; r++) {
+                for (let f = 0; f < 8; f++) {
+                    const square = document.createElement('div');
+                    square.className = `square ${(r + f) % 2 === 0 ? 'dark' : 'light'}`;
+                    square.dataset.square = files[f] + ranks[r];
+                    
+                    // Add event listeners for interaction
+                    square.addEventListener('click', handleSquareClick);
+                    
+                    boardElement.appendChild(square);
+                }
+            }
+            
+            // Update pieces on the board
+            updateBoard();
+            createBackgroundParticles();
+        }
+
+        // Update the board based on current game state
+        function updateBoard() {
+            // Clear valid move indicators
+            document.querySelectorAll('.square').forEach(square => {
+                square.classList.remove('valid-move');
+                square.classList.remove('selected');
+                // Remove existing pieces
+                const piece = square.querySelector('.piece');
+                if (piece) {
+                    piece.remove();
+                }
+            });
+
+            // Place pieces according to current position
+            for (let r = 0; r < 8; r++) {
+                for (let c = 0; c < 8; c++) {
+                    const piece = chess.board()[r][c];
+                    if (piece) {
+                        const squareId = 'abcdefgh'[c] + '87654321'[r];
+                        const squareElement = document.querySelector(`[data-square="${squareId}"]`);
+                        
+                        if (squareElement) {
+                            const pieceElement = document.createElement('img');
+                            pieceElement.className = `piece ${piece.color === 'w' ? 'white' : 'black'}`;
+                            pieceElement.src = pieceImages[piece.color + piece.type];
+                            pieceElement.draggable = true;
+                            pieceElement.dataset.piece = piece.color + piece.type;
+                            
+                            // Add drag events
+                            pieceElement.addEventListener('dragstart', handleDragStart);
+                            pieceElement.addEventListener('dragend', handleDragEnd);
+                            
+                            squareElement.appendChild(pieceElement);
+                        }
+                    }
+                }
+            }
+
+            // Update selected square if any
+            if (selectedSquare) {
+                const squareElement = document.querySelector(`[data-square="${selectedSquare}"]`);
+                if (squareElement) {
+                    squareElement.classList.add('selected');
+                    
+                    // Show valid moves
+                    const moves = chess.moves({ square: selectedSquare, verbose: true });
+                    moves.forEach(move => {
+                        const targetSquare = document.querySelector(`[data-square="${move.to}"]`);
+                        if (targetSquare) {
+                            targetSquare.classList.add('valid-move');
+                        }
+                    });
+                }
+            }
+
+            // Update game status
+            updateGameStatus();
+            updateCapturedPieces();
+        }
+
+        // Handle square click
+        function handleSquareClick(event) {
+            if (isAnimating || chess.game_over() || chess.turn() !== playerColor) return;
+
+            const squareElement = event.target.closest('.square');
+            const square = squareElement.dataset.square;
+            
+            // If clicking on a piece of player's color
+            const piece = chess.get(square);
+            if (piece && piece.color === playerColor) {
+                selectSquare(square);
+                return;
+            }
+            
+            // If a square is already selected, try to move
+            if (selectedSquare) {
+                const from = selectedSquare;
+                const to = square;
+                
+                // Check if the move is valid
+                const moves = chess.moves({ square: from, verbose: true });
+                const isValidMove = moves.some(move => move.to === to);
+                
+                if (isValidMove) {
+                    // Check for captures
+                    const capturedPiece = chess.get(to);
+                    
+                    // Make the move
+                    const move = chess.move({ from, to, promotion: 'q' });
+                    
+                    if (move) {
+                        // Animate the piece movement
+                        animateMove(from, to, capturedPiece);
+                        
+                        // After player's move, make computer move
+                        setTimeout(makeComputerMove, 500);
+                    }
+                }
+                
+                // Clear selection
+                selectedSquare = null;
+            } else {
+                selectSquare(square);
+            }
+            
+            updateBoard();
+        }
+
+        // Select a square and show valid moves
+        function selectSquare(square) {
+            const piece = chess.get(square);
+            
+            if (piece && piece.color === playerColor) {
+                selectedSquare = square;
+                updateBoard();
+            }
+        }
+
+        // Handle drag start
+        function handleDragStart(event) {
+            if (chess.game_over() || chess.turn() !== playerColor) {
+                event.preventDefault();
+                return;
+            }
+
+            const pieceElement = event.target;
+            const squareElement = pieceElement.closest('.square');
+            const square = squareElement.dataset.square;
+            const piece = chess.get(square);
+            
+            if (piece && piece.color === playerColor) {
+                selectedSquare = square;
+                pieceElement.classList.add('dragging');
+                event.dataTransfer.setData('text/plain', square);
+                
+                // Add dragover and drop events to all squares
+                document.querySelectorAll('.square').forEach(sq => {
+                    sq.addEventListener('dragover', handleDragOver);
+                    sq.addEventListener('drop', handleDrop);
+                });
+                
+                updateBoard();
+            } else {
+                event.preventDefault();
+            }
+        }
+
+        // Handle drag over
+        function handleDragOver(event) {
+            event.preventDefault();
+        }
+
+        // Handle drag end
+        function handleDragEnd(event) {
+            event.target.classList.remove('dragging');
+            
+            // Remove dragover and drop events
+            document.querySelectorAll('.square').forEach(sq => {
+                sq.removeEventListener('dragover', handleDragOver);
+                sq.removeEventListener('drop', handleDrop);
+            });
+        }
+
+        // Handle drop
+        function handleDrop(event) {
+            event.preventDefault();
+            
+            if (isAnimating) return;
+            
+            const from = event.dataTransfer.getData('text/plain');
+            const to = event.target.closest('.square').dataset.square;
+            
+            // Check if the move is valid
+            const moves = chess.moves({ square: from, verbose: true });
+            const isValidMove = moves.some(move => move.to === to);
+            
+            if (isValidMove) {
+                // Check for captures
+                const capturedPiece = chess.get(to);
+                
+                // Make the move
+                const move = chess.move({ from, to, promotion: 'q' });
+                
+                if (move) {
+                    // Animate the piece movement
+                    animateMove(from, to, capturedPiece);
+                    
+                    // After player's move, make computer move
+                    setTimeout(makeComputerMove, 500);
+                }
+            }
+            
+            selectedSquare = null;
+            updateBoard();
+        }
+
+        // Move a piece without animation
+        function animateMove(from, to, capturedPiece) {
+            // If there was a captured piece, add to captured pieces list
+            if (capturedPiece) {
+                capturedPieces[capturedPiece.color].push(capturedPiece.type);
+            }
+            
+            // Update the board immediately
+            isAnimating = false;
+            updateBoard();
+            
+            // Check game status after move completes
+            checkGameEnd();
+        }
+
+        // Make a computer move
+        function makeComputerMove() {
+            if (chess.game_over() || chess.turn() === playerColor) return;
+            
+            let move;
+            const difficulty = difficultySelect.value;
+            
+            if (difficulty === 'beginner') {
+                // Random legal move for beginner
+                const moves = chess.moves({ verbose: true });
+                if (moves.length > 0) {
+                    const randomIndex = Math.floor(Math.random() * moves.length);
+                    move = moves[randomIndex];
+                }
+            } else {
+                // More intelligent move for intermediate
+                move = getBestMove();
+            }
+            
+            if (move) {
+                // Check for captures
+                const capturedPiece = chess.get(move.to);
+                
+                // Make the move
+                chess.move(move);
+                
+                // Animate the move
+                animateMove(move.from, move.to, capturedPiece);
+            }
+        }
+
+        // Simple minimax algorithm for AI (intermediate level)
+        function getBestMove() {
+            // Get all possible moves
+            const moves = chess.moves({ verbose: true });
+            let bestMove = null;
+            let bestScore = -Infinity;
+            
+            for (let i = 0; i < moves.length; i++) {
+                const move = moves[i];
+                
+                // Make the move
+                chess.move(move);
+                
+                // Evaluate position
+                const score = evaluateBoard();
+                
+                // Undo the move
+                chess.undo();
+                
+                // Update best move if needed
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestMove = move;
+                }
+            }
+            
+            return bestMove;
+        }
+
+        // Simple board evaluation function
+        function evaluateBoard() {
+            const pieceValues = {
+                'p': 1,
+                'n': 3,
+                'b': 3,
+                'r': 5,
+                'q': 9,
+                'k': 0  // The king is not given a material value
+            };
+            
+            let score = 0;
+            
+            // Evaluate material
+            chess.board().forEach(row => {
+                row.forEach(piece => {
+                    if (piece) {
+                        const multiplier = piece.color === playerColor ? -1 : 1;
+                        score += multiplier * pieceValues[piece.type];
+                        
+                        // Bonus for controlling center (for intermediate AI)
+                        if (piece.type === 'p' || piece.type === 'n') {
+                            const square = piece.square;
+                            if (square === 'd4' || square === 'e4' || square === 'd5' || square === 'e5') {
+                                score += multiplier * 0.5;
+                            }
+                        }
+                    }
+                });
+            });
+            
+            return score;
+        }
+
+        // Update the game status
+        function updateGameStatus() {
+            if (chess.game_over()) {
+                if (!isGameOver) {
+                    // Mark game as over (to prevent multiple popups)
+                    isGameOver = true;
+                    
+                    // Apply grayscale effect to board
+                    boardElement.classList.add('game-over');
+                }
+                
+                if (chess.in_checkmate()) {
+                    const winner = chess.turn() === 'w' ? 'Black' : 'White';
+                    statusText.textContent = `Checkmate! ${winner} wins!`;
+                } else if (chess.in_draw()) {
+                    statusText.textContent = 'Game Over! It\'s a draw.';
+                } else if (chess.in_stalemate()) {
+                    statusText.textContent = 'Game Over! Stalemate.';
+                } else if (chess.in_threefold_repetition()) {
+                    statusText.textContent = 'Game Over! Draw by repetition.';
+                } else if (chess.insufficient_material()) {
+                    statusText.textContent = 'Game Over! Insufficient material.';
+                }
+            } else {
+                // Make sure game-over class is removed
+                isGameOver = false;
+                boardElement.classList.remove('game-over');
+                
+                if (chess.in_check()) {
+                    const inCheck = chess.turn() === 'w' ? 'White' : 'Black';
+                    statusText.textContent = `${inCheck} is in check!`;
+                } else {
+                    const turn = chess.turn() === 'w' ? 'White' : 'Black';
+                    statusText.textContent = `${turn}'s turn to move.`;
+                }
+            }
+        }
+
+        // Update captured pieces display
+        function updateCapturedPieces() {
+            // Clear containers
+            capturedWhiteContainer.innerHTML = '';
+            capturedBlackContainer.innerHTML = '';
+            
+            // Add white captured pieces
+            capturedPieces.w.forEach(pieceType => {
+                const img = document.createElement('img');
+                img.src = pieceImages['w' + pieceType];
+                capturedBlackContainer.appendChild(img);
+            });
+            
+            // Add black captured pieces
+            capturedPieces.b.forEach(pieceType => {
+                const img = document.createElement('img');
+                img.src = pieceImages['b' + pieceType];
+                capturedWhiteContainer.appendChild(img);
+            });
+        }
+
+        // Create background particles
+        function createBackgroundParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50; // number of particles
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // Random size between 1 and 3px
+                const size = Math.random() * 2 + 1;
+                
+                // Random position
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                
+                // Random animation duration between 20 and 60 seconds
+                const duration = Math.random() * 40 + 20;
+                
+                // Random color (cyan or magenta with varying opacity)
+                const color = Math.random() > 0.5 ? 
+                    `rgba(0, 255, 255, ${Math.random() * 0.3 + 0.1})` : 
+                    `rgba(255, 0, 255, ${Math.random() * 0.3 + 0.1})`;
+                
+                // Add styles
+                particle.style.cssText = `
+                    position: absolute;
+                    width: ${size}px;
+                    height: ${size}px;
+                    background-color: ${color};
+                    left: ${posX}%;
+                    top: ${posY}%;
+                    border-radius: 50%;
+                    box-shadow: 0 0 ${size * 2}px ${color};
+                    animation: float ${duration}s infinite linear;
+                    opacity: ${Math.random() * 0.5 + 0.3};
+                `;
+                
+                particlesContainer.appendChild(particle);
+            }
+            
+            // Add CSS animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes float {
+                    0% {
+                        transform: translate(0, 0);
+                    }
+                    25% {
+                        transform: translate(${Math.random() * 20 - 10}px, ${Math.random() * 20 - 10}px);
+                    }
+                    50% {
+                        transform: translate(${Math.random() * 20 - 10}px, ${Math.random() * 20 - 10}px);
+                    }
+                    75% {
+                        transform: translate(${Math.random() * 20 - 10}px, ${Math.random() * 20 - 10}px);
+                    }
+                    100% {
+                        transform: translate(0, 0);
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // Restart the game
+        function restartGame() {
+            chess.reset();
+            selectedSquare = null;
+            capturedPieces.w = [];
+            capturedPieces.b = [];
+            isGameOver = false;
+            boardElement.classList.remove('game-over');
+            closeModal();
+            updateBoard();
+        }
+
+        // Undo last move (both player and computer)
+        function undoMove() {
+            if (chess.history().length >= 2) {
+                chess.undo(); // Undo computer's move
+                chess.undo(); // Undo player's move
+                selectedSquare = null;
+                
+                // Update captured pieces
+                recalculateCapturedPieces();
+                
+                updateBoard();
+            }
+        }
+
+        // Recalculate captured pieces after undo
+        function recalculateCapturedPieces() {
+            // Reset captured pieces
+            capturedPieces.w = [];
+            capturedPieces.b = [];
+            
+            // Count pieces of each type that should be on the board
+            const expectedPieces = {
+                'p': 8, 'n': 2, 'b': 2, 'r': 2, 'q': 1, 'k': 1
+            };
+            
+            // Count actual pieces on the board
+            const actualPieces = {
+                'w': { 'p': 0, 'n': 0, 'b': 0, 'r': 0, 'q': 0, 'k': 0 },
+                'b': { 'p': 0, 'n': 0, 'b': 0, 'r': 0, 'q': 0, 'k': 0 }
+            };
+            
+            chess.board().forEach(row => {
+                row.forEach(piece => {
+                    if (piece) {
+                        actualPieces[piece.color][piece.type]++;
+                    }
+                });
+            });
+            
+            // Calculate captured pieces
+            for (const pieceType in expectedPieces) {
+                const whiteCaptures = expectedPieces[pieceType] - actualPieces.w[pieceType];
+                const blackCaptures = expectedPieces[pieceType] - actualPieces.b[pieceType];
+                
+                for (let i = 0; i < whiteCaptures; i++) {
+                    capturedPieces.w.push(pieceType);
+                }
+                
+                for (let i = 0; i < blackCaptures; i++) {
+                    capturedPieces.b.push(pieceType);
+                }
+            }
+        }
+
+        // Check for game end and show modal
+        function checkGameEnd() {
+            if (chess.game_over() && !modal.classList.contains('show')) {
+                let title, message;
+                
+                if (chess.in_checkmate()) {
+                    const winner = chess.turn() === 'w' ? 'Black' : 'White';
+                    title = `${winner} Wins!`;
+                    message = `Checkmate! ${winner} has won the game.`;
+                } else if (chess.in_stalemate()) {
+                    title = "Stalemate";
+                    message = "The game has ended in a stalemate.";
+                } else if (chess.in_draw()) {
+                    title = "Draw";
+                    message = "The game has ended in a draw.";
+                } else if (chess.in_threefold_repetition()) {
+                    title = "Draw by Repetition";
+                    message = "The game has ended in a draw due to threefold repetition.";
+                } else if (chess.insufficient_material()) {
+                    title = "Draw";
+                    message = "The game has ended in a draw due to insufficient material.";
+                }
+                
+                showModal(title, message);
+            }
+        }
+
+        // Show modal with custom message
+        function showModal(title, message) {
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            modal.classList.add('show');
+        }
+
+        // Close the modal
+        function closeModal() {
+            modal.classList.remove('show');
+        }
+
+        // Event Listeners
+        restartBtn.addEventListener('click', restartGame);
+        undoBtn.addEventListener('click', undoMove);
+        modalCloseBtn.addEventListener('click', closeModal);
+
+        // Initialize the game
+        initializeBoard();
+    </script>
+</body>
+</html>

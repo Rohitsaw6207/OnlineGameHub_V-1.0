@@ -8,15 +8,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
       :root {
-        --bg-color: #f5f7fa;
-        --text-primary: #333;
-        --text-secondary: #666;
-        --blue-glow: #4d7cff;
-        --red-glow: #ff4d6d;
-        --glass-bg: rgba(255, 255, 255, 0.25);
-        --glass-border: rgba(255, 255, 255, 0.18);
-        --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-        --grid-line: rgba(200, 200, 200, 0.8);
+        --primary-color: #4527a0;
+        --secondary-color: #7c4dff;
+        --accent-color: #ff6d00;
+        --bg-dark: #121212;
+        --text-light: #f5f5f5;
+        --card-bg: rgba(255, 255, 255, 0.08);
+        --card-hover: rgba(255, 255, 255, 0.12);
+        --bg-color: var(--bg-dark);
+        --text-primary: var(--text-light);
+        --text-secondary: rgba(245, 245, 245, 0.7);
+        --blue-glow: var(--secondary-color);
+        --red-glow: var(--accent-color);
+        --glass-bg: rgba(69, 39, 160, 0.15);
+        --glass-border: rgba(124, 77, 255, 0.2);
+        --glass-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.3);
+        --grid-line: rgba(124, 77, 255, 0.3);
       }
 
       * {
@@ -26,16 +33,16 @@
       }
 
       body, html {
-        height: 100%;
+        min-height: 100vh;
         width: 100%;
         font-family: 'Poppins', sans-serif;
         background: var(--bg-color);
         color: var(--text-primary);
         display: flex;
-        justify-content: center;
+        flex-direction: column;
         align-items: center;
         position: relative;
-        overflow: hidden;
+        overflow-x: hidden;
       }
 
       .container {
@@ -146,9 +153,9 @@
         aspect-ratio: 1;
         border-radius: 10px;
         backdrop-filter: blur(4px);
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(40, 40, 70, 0.4);
         border: 1px solid var(--glass-border);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -162,8 +169,8 @@
 
       .cell:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-        background: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        background: rgba(60, 60, 100, 0.5);
       }
 
       .cell.x {
@@ -178,7 +185,7 @@
 
       .restart-btn {
         padding: 12px 25px;
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(40, 40, 70, 0.5);
         border: 1px solid var(--glass-border);
         border-radius: 50px;
         color: var(--text-primary);
@@ -242,7 +249,7 @@
       }
 
       .message-box {
-        background: var(--glass-bg);
+        background: rgba(30, 30, 50, 0.7);
         backdrop-filter: blur(10px);
         border: 1px solid var(--glass-border);
         box-shadow: var(--glass-shadow);
@@ -297,8 +304,8 @@
         position: absolute;
         border-radius: 50%;
         pointer-events: none;
-        background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.1));
-        box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        background: radial-gradient(circle at 30% 30%, rgba(124, 77, 255, 0.8), rgba(124, 77, 255, 0.1));
+        box-shadow: 0 0 10px rgba(124, 77, 255, 0.4);
       }
 
       /* Animation for score changes */
@@ -353,25 +360,30 @@
   </head>
   <body>
     <div class="particles" id="particles"></div>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <div class="container">
       <div class="header">
-        <h1>Tic Tac Toe vs Computer</h1>
+        <h1>Tic Tac Toe</h1>
+      </div>
+      
+      <div class="ad-banner" style="width: 100%; max-width: 468px; height: 60px; background: var(--card-bg); border-radius: 10px; margin-bottom: 20px; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(4px); overflow: hidden; border: 1px solid var(--secondary-color); box-shadow: 0 0 15px rgba(124, 77, 255, 0.15);">
+        <span style="color: var(--text-secondary);">Advertisement Space</span>
       </div>
 
       <div class="scoreboard">
         <div class="score-box player">
-          <div class="score-label">You (X)</div>
+          <div class="score-label">Win</div>
           <div class="score-value" id="player-score">0</div>
         </div>
         
         <div class="score-box draws">
-          <div class="score-label">Draws</div>
+          <div class="score-label">Draw</div>
           <div class="score-value" id="draws-score">0</div>
         </div>
         
         <div class="score-box computer">
-          <div class="score-label">Computer (O)</div>
+          <div class="score-label">Lose</div>
           <div class="score-value" id="computer-score">0</div>
         </div>
       </div>
@@ -389,7 +401,33 @@
       </div>
 
       <button class="restart-btn" id="restart-btn">Restart Game</button>
+      
+      <div class="ad-banner" style="width: 100%; max-width: 468px; height: 60px; background: var(--card-bg); border-radius: 10px; margin-top: 20px; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(4px); overflow: hidden; border: 1px solid var(--secondary-color); box-shadow: 0 0 15px rgba(124, 77, 255, 0.15);">
+        <span style="color: var(--text-secondary);">Advertisement Space</span>
+      </div>
     </div>
+    
+    <footer style="width: 100%; background: var(--primary-color); color: var(--text-light); padding: 15px 0; box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.4); border-top: 1px solid rgba(124, 77, 255, 0.3); margin-top: 40px;">
+        <div class="footer-content" style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 20px; flex-wrap: wrap;">
+            <div class="footer-left" style="margin: 10px 0;">
+                <p class="developer" style="margin: 0; font-size: 0.9rem; text-shadow: 0 0 8px rgba(124, 77, 255, 0.5);">Developed by Rohit Kumar</p>
+            </div>
+            <div class="footer-center" style="margin: 10px 0; text-align: center;">
+                <p class="copyright" style="margin: 0; font-size: 0.9rem; color: var(--text-secondary);">© 2023 Online Game Hub. All rights reserved.</p>
+            </div>
+            <div class="social-links" style="margin: 10px 0; display: flex; gap: 20px;">
+                <a href="https://github.com/" class="social-link" aria-label="GitHub" style="color: var(--secondary-color); font-size: 1.2rem; transition: all 0.3s ease;">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://linkedin.com/" class="social-link" aria-label="LinkedIn" style="color: var(--secondary-color); font-size: 1.2rem; transition: all 0.3s ease;">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+                <a href="mailto:rohitku6207@gmail.com" class="social-link" aria-label="Email" style="color: var(--secondary-color); font-size: 1.2rem; transition: all 0.3s ease;">
+                    <i class="fas fa-envelope"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
 
     <div class="message-overlay" id="message-overlay">
       <div class="message-box">
@@ -409,10 +447,10 @@
 
       function createParticles() {
         const container = document.getElementById('particles');
-        const particleCount = 30;
+        const particleCount = 40;
         
         for (let i = 0; i < particleCount; i++) {
-          const size = Math.random() * 50 + 10;
+          const size = Math.random() * 40 + 5;
           const particle = document.createElement('div');
           particle.classList.add('particle');
           
@@ -423,13 +461,13 @@
           particle.style.height = `${size}px`;
           
           // Different opacities for depth
-          particle.style.opacity = Math.random() * 0.6 + 0.1;
+          particle.style.opacity = Math.random() * 0.5 + 0.1;
           
-          // Different colors - soft blue or pink tints
-          const color = Math.random() > 0.5 ? 
-              `rgba(77, 124, 255, ${Math.random() * 0.3})` : 
-              `rgba(255, 77, 109, ${Math.random() * 0.3})`;
-          particle.style.background = color;
+          // Purple tints with occasional accent
+          const particleColor = Math.random() > 0.9 ? 
+              `rgba(255, 109, 0, ${Math.random() * 0.3})` : 
+              `rgba(124, 77, 255, ${Math.random() * 0.4})`;
+          particle.style.background = particleColor;
           
           container.appendChild(particle);
           
@@ -541,7 +579,7 @@
             } else {
               computerScore++;
               animateScore(computerScoreEl, computerScore);
-              showMessage('Computer Wins!');
+              showMessage('You Lose!');
             }
             
             highlightWinningCombination();

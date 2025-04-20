@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Play free online games against computer or in local multiplayer mode. Enjoy Tic Tac Toe, Chess, Snake Game and more!">
     <title>🎮 Online Game Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary-color: #4527a0;
@@ -80,15 +81,25 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
+        nav {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 1rem;
+        }
+
         .logo-container {
             display: flex;
             align-items: center;
-            margin-bottom: 1rem;
         }
 
-        .logo {
-            font-size: 2.5rem;
-            margin-right: 0.5rem;
+        .logo-img {
+            width: 50px;
+            height: 50px;
+            margin-right: 1rem;
+            border-radius: 10px;
         }
 
         .site-title {
@@ -234,6 +245,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            text-decoration: none;
         }
 
         .play-btn:hover {
@@ -257,31 +269,43 @@
             max-width: 1200px;
             margin: 0 auto;
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
             align-items: center;
         }
 
-        .social-links {
-            display: flex;
-            gap: 1.5rem;
-            margin: 1.5rem 0;
+        .footer-left {
+            text-align: left;
         }
 
-        .social-link {
-            color: var(--text-light);
-            font-size: 1.2rem;
-            text-decoration: none;
-            transition: color 0.3s ease;
+        .developer {
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
         }
 
-        .social-link:hover {
-            color: var(--accent-color);
+        .footer-center {
+            text-align: center;
         }
 
         .copyright {
             font-size: 0.9rem;
             color: rgba(255, 255, 255, 0.6);
-            text-align: center;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .social-link {
+            color: var(--text-light);
+            font-size: 1.5rem;
+            transition: color 0.3s ease, transform 0.3s ease;
+            display: inline-block;
+        }
+
+        .social-link:hover {
+            color: var(--accent-color);
+            transform: scale(1.2);
         }
 
         /* Responsive Adjustments */
@@ -293,6 +317,19 @@
             .games-grid {
                 grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .footer-left, .footer-center, .social-links {
+                text-align: center;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
         }
 
         @media (max-width: 480px) {
@@ -300,8 +337,9 @@
                 font-size: 1.5rem;
             }
 
-            .logo {
-                font-size: 2rem;
+            .logo-img {
+                width: 40px;
+                height: 40px;
             }
 
             .ad-header, .ad-middle, .ad-footer {
@@ -316,10 +354,12 @@
 
     <!-- Header Section -->
     <header>
-        <div class="logo-container">
-            <div class="logo">🎮</div>
-            <h1 class="site-title">Online Game Hub</h1>
-        </div>
+        <nav>
+            <div class="logo-container">
+                <img src="https://pixabay.com/get/g74715d636eed8c01706bbf0a1351673f2bc7e2dd9a1015d228e33ebbffac846a0629019cf23394856bdef301c148b6b23700f22fc345307d890b251a03326d78_640.png" alt="Game Hub Logo" class="logo-img">
+                <h1 class="site-title">Online Game Hub</h1>
+            </div>
+        </nav>
     </header>
 
     <!-- Top Ad Block -->
@@ -332,12 +372,12 @@
             <!-- Game 1: Tic Tac Toe -->
             <div class="game-card">
                 <div class="game-img">❌⭕</div>
-                <div class="game-content">
+                <center><div class="game-content">
                     <h2 class="game-title">Tic Tac Toe</h2>
-                    <p class="game-mode">vs Computer</p>
+                    <p class="game-mode"></p>
                     <p class="game-description">Classic game of X's and O's. Be the first to get three in a row to win!</p>
-                    <button class="play-btn"><a href="Games\Tic Tac Toe\index.html"><span class="play-icon">▶️</span></a> Play Now</button>
-                </div>
+                    <a href="Games\Tic Tac Toe\index.html" class="play-btn"><span class="play-icon">▶️</span> Play Now</a>
+                </div></center>
             </div>
 
             <!-- Game 2: Snake Game -->
@@ -347,18 +387,18 @@
                     <h2 class="game-title">Snake Game</h2>
                     <p class="game-mode">vs Computer</p>
                     <p class="game-description">Control the snake, eat food, and grow longer without hitting the walls or yourself.</p>
-                    <button class="play-btn"><span class="play-icon">▶️</span> Play Now</button>
+                    <a href="Games\Snake Game\index.html" class="play-btn"><span class="play-icon">▶️</span> Play Now</a>
                 </div>
             </div>
 
-            <!-- Game 3: Rock Paper Scissors -->
+            <!-- Game 3: Sudoku -->
             <div class="game-card">
-                <div class="game-img">✂️</div>
+                <div class="game-img">🔢</div>
                 <div class="game-content">
-                    <h2 class="game-title">Rock Paper Scissors</h2>
+                    <h2 class="game-title">Sudoku</h2>
                     <p class="game-mode">vs Computer</p>
-                    <p class="game-description">Test your luck against the computer in this classic hand game.</p>
-                    <button class="play-btn"><span class="play-icon">▶️</span> Play Now</button>
+                    <p class="game-description">Fill the grid with numbers so each row, column and region contains every number only once.</p>
+                    <a href="Games\Sudoko\index.html" class="play-btn"><span class="play-icon">▶️</span> Play Now</a>
                 </div>
             </div>
 
@@ -374,40 +414,40 @@
                     <h2 class="game-title">Chess</h2>
                     <p class="game-mode">vs Computer</p>
                     <p class="game-description">Strategic board game where you must outthink your opponent to capture their king.</p>
-                    <button class="play-btn"><span class="play-icon">▶️</span> Play Now</button>
+                    <a href="games/chess.html" class="play-btn"><span class="play-icon">▶️</span> Play Now</a>
                 </div>
             </div>
 
-            <!-- Game 5: Puzzle Game -->
+            <!-- Game 5: Pong -->
             <div class="game-card">
-                <div class="game-img">🧩</div>
+                <div class="game-img">🏓</div>
                 <div class="game-content">
-                    <h2 class="game-title">Puzzle Game</h2>
+                    <h2 class="game-title">Pong</h2>
                     <p class="game-mode">vs Computer</p>
-                    <p class="game-description">Challenge your mind with various puzzles and brain teasers.</p>
-                    <button class="play-btn"><span class="play-icon">▶️</span> Play Now</button>
+                    <p class="game-description">Classic table tennis arcade game. Keep the ball in play and score by getting it past your opponent.</p>
+                    <a href="games/pong.html" class="play-btn"><span class="play-icon">▶️</span> Play Now</a>
                 </div>
             </div>
 
-            <!-- Game 6: Hangman -->
+            <!-- Game 6: Flappy Bird -->
             <div class="game-card">
-                <div class="game-img">📝</div>
+                <div class="game-img">🐦</div>
                 <div class="game-content">
-                    <h2 class="game-title">Hangman</h2>
+                    <h2 class="game-title">Flappy Bird</h2>
                     <p class="game-mode">vs Computer</p>
-                    <p class="game-description">Guess the word one letter at a time before the hangman is complete.</p>
-                    <button class="play-btn"><span class="play-icon">▶️</span> Play Now</button>
+                    <p class="game-description">Navigate a bird through a series of pipes without crashing. How far can you go?</p>
+                    <a href="games/flappybird.html" class="play-btn"><span class="play-icon">▶️</span> Play Now</a>
                 </div>
             </div>
 
-            <!-- Game 7: Card Game -->
+            <!-- Game 7: Asteroids -->
             <div class="game-card">
-                <div class="game-img">🃏</div>
+                <div class="game-img">☄️</div>
                 <div class="game-content">
-                    <h2 class="game-title">Card Game</h2>
+                    <h2 class="game-title">Asteroids</h2>
                     <p class="game-mode">vs Computer</p>
-                    <p class="game-description">Play various card games against the computer with different difficulty levels.</p>
-                    <button class="play-btn"><span class="play-icon">▶️</span> Play Now</button>
+                    <p class="game-description">Control a spaceship and destroy asteroids while avoiding collision with debris.</p>
+                    <a href="games/asteroids.html" class="play-btn"><span class="play-icon">▶️</span> Play Now</a>
                 </div>
             </div>
 
@@ -416,36 +456,25 @@
                 Advertisement Space
             </div>
 
-            <!-- Game 8: Connect Four -->
+            <!-- Game 8: Breakout -->
             <div class="game-card">
-                <div class="game-img">🔢</div>
+                <div class="game-img">🧱</div>
                 <div class="game-content">
-                    <h2 class="game-title">Connect Four</h2>
-                    <p class="game-mode">Local Multiplayer</p>
-                    <p class="game-description">Drop discs to connect four of your color vertically, horizontally, or diagonally.</p>
-                    <button class="play-btn"><span class="play-icon">▶️</span> Play Now</button>
+                    <h2 class="game-title">Breakout</h2>
+                    <p class="game-mode">vs Computer</p>
+                    <p class="game-description">Use a paddle to bounce a ball and break all the bricks. Clear all levels to win!</p>
+                    <a href="games/breakout.html" class="play-btn"><span class="play-icon">▶️</span> Play Now</a>
                 </div>
             </div>
 
-            <!-- Game 9: Memory Match -->
+            <!-- Game 9: Dino Run -->
             <div class="game-card">
-                <div class="game-img">🎴</div>
+                <div class="game-img">🦖</div>
                 <div class="game-content">
-                    <h2 class="game-title">Memory Match</h2>
+                    <h2 class="game-title">Dino Run</h2>
                     <p class="game-mode">vs Computer</p>
-                    <p class="game-description">Test your memory by matching pairs of cards in this classic memory game.</p>
-                    <button class="play-btn"><span class="play-icon">▶️</span> Play Now</button>
-                </div>
-            </div>
-
-            <!-- Game 10: Word Search -->
-            <div class="game-card">
-                <div class="game-img">🔤</div>
-                <div class="game-content">
-                    <h2 class="game-title">Word Search</h2>
-                    <p class="game-mode">vs Computer</p>
-                    <p class="game-description">Find hidden words in a grid of letters. Challenge your vocabulary skills!</p>
-                    <button class="play-btn"><span class="play-icon">▶️</span> Play Now</button>
+                    <p class="game-description">Jump over cacti and dodge birds in this endless runner game. How far can you run?</p>
+                    <a href="games/dinorun.html" class="play-btn"><span class="play-icon">▶️</span> Play Now</a>
                 </div>
             </div>
 
@@ -453,6 +482,18 @@
             <div class="ad-block ad-sidebar">
                 Advertisement Space
             </div>
+
+            <!-- Game 10: Helix Jump -->
+            <div class="game-card">
+                <div class="game-img">🌀</div>
+                <div class="game-content">
+                    <h2 class="game-title">Helix Jump</h2>
+                    <p class="game-mode">vs Computer</p>
+                    <p class="game-description">Guide a bouncing ball through a spiral tower by avoiding obstacles and breaking platforms.</p>
+                    <a href="games/helixjump.html" class="play-btn"><span class="play-icon">▶️</span> Play Now</a>
+                </div>
+            </div>
+
         </div>
     </main>
 
@@ -464,12 +505,23 @@
     <!-- Footer Section -->
     <footer>
         <div class="footer-content">
-            <div class="social-links">
-                <a href="https://github.com/" class="social-link" aria-label="GitHub">GitHub</a>
-                <a href="https://linkedin.com/" class="social-link" aria-label="LinkedIn">LinkedIn</a>
-                <a href="mailto:rohitku6207@gmail.com" class="social-link" aria-label="Email">Email</a>
+            <div class="footer-left">
+                <p class="developer">Developed by Rohit Kumar</p>
             </div>
-            <p class="copyright">© 2023 Online Game Hub. All rights reserved.</p>
+            <div class="footer-center">
+                <p class="copyright">© 2023 Online Game Hub. All rights reserved.</p>
+            </div>
+            <div class="social-links">
+                <a href="https://github.com/" class="social-link" aria-label="GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://linkedin.com/" class="social-link" aria-label="LinkedIn">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+                <a href="mailto:rohitku6207@gmail.com" class="social-link" aria-label="Email">
+                    <i class="fas fa-envelope"></i>
+                </a>
+            </div>
         </div>
     </footer>
 
