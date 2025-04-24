@@ -122,7 +122,6 @@
             max-width: 600px;
             margin: 0 auto;
             position: relative;
-            box-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color);
         }
 
         .chessboard {
@@ -200,7 +199,7 @@
             opacity: 0.6;
             cursor: grabbing;
         }
-        
+
         /* Game Status */
         .game-status {
             width: 100%;
