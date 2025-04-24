@@ -30,7 +30,6 @@ body {
     font-size: 2.5rem;
     margin: 20px 0;
     color: #00eeff;
-    text-shadow: 0 0 10px #00eeff, 0 0 20px #00eeff;
     animation: pulse 2s infinite alternate, slideIn 1s ease-out;
 }
 
@@ -44,7 +43,6 @@ body {
     justify-content: center;
     align-items: center;
     border: 2px solid #30eeff;
-    box-shadow: 0 0 15px #30eeff;
     border-radius: 8px;
     opacity: 0;
     animation: fadeIn 1s ease forwards;
@@ -75,7 +73,6 @@ body {
     position: relative;
     overflow: hidden;
     border: 2px solid #30eeff;
-    box-shadow: 0 0 20px #30eeff;
     border-radius: 10px;
 }
 
@@ -95,7 +92,6 @@ canvas {
     font-size: 2rem;
     color: white;
     z-index: 100;
-    text-shadow: 0 0 5px #30eeff;
 }
 
 .game-over {
@@ -123,7 +119,6 @@ canvas {
     border-radius: 50px;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 0 10px #30eeff;
     margin: 10px;
 }
 

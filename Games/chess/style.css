@@ -50,17 +50,7 @@
             margin: 1rem 0;
             text-align: center;
             color: var(--text-color);
-            text-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color);
             animation: pulse 2s infinite alternate;
-        }
-
-        @keyframes pulse {
-            0% {
-                text-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color);
-            }
-            100% {
-                text-shadow: 0 0 15px var(--primary-color), 0 0 30px var(--primary-color), 0 0 40px var(--primary-color);
-            }
         }
 
         /* Ad Containers */
@@ -76,7 +66,6 @@
             align-items: center;
             position: relative;
             backdrop-filter: blur(8px);
-            box-shadow: 0 0 15px var(--shadow-color);
             transition: all 0.3s ease;
         }
 
@@ -111,7 +100,6 @@
             border-radius: 5px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 0 10px rgba(0, 255, 255, 0.1);
             font-size: 0.9rem;
         }
 
@@ -134,6 +122,7 @@
             max-width: 600px;
             margin: 0 auto;
             position: relative;
+            box-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color);
         }
 
         .chessboard {
@@ -211,9 +200,7 @@
             opacity: 0.6;
             cursor: grabbing;
         }
-
-        /* Animation keyframes removed */
-
+        
         /* Game Status */
         .game-status {
             width: 100%;
