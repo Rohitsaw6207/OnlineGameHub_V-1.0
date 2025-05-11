@@ -53,35 +53,6 @@
             animation: pulse 2s infinite alternate;
         }
 
-        /* Ad Containers */
-        .ad-container {
-            width: 100%;
-            height: 90px;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            margin: 20px 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            backdrop-filter: blur(8px);
-            transition: all 0.3s ease;
-        }
-
-        .ad-container:hover {
-            box-shadow: 0 0 20px var(--shadow-color);
-            transform: translateY(-2px);
-        }
-
-        .ad-label {
-            position: absolute;
-            top: 5px;
-            left: 10px;
-            font-size: 0.7rem;
-            color: rgba(255, 255, 255, 0.6);
-        }
-
         /* Game Controls */
         .game-controls {
             display: flex;
@@ -409,9 +380,6 @@ footer {
                 max-width: 300px;
             }
             
-            .ad-container {
-                height: 70px;
-            }
         }
 
         @media (max-width: 480px) {

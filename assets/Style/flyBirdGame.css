@@ -33,37 +33,6 @@ body {
     animation: pulse 2s infinite alternate, slideIn 1s ease-out;
 }
 
-.ad-container {
-    width: 800px;
-    max-width: 90vw;
-    height: 80px;
-    margin: 10px 0;
-    background-color: rgba(50, 50, 50, 0.3);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 2px solid #30eeff;
-    border-radius: 8px;
-    opacity: 0;
-    animation: fadeIn 1s ease forwards;
-    transition: all 0.3s ease;
-}
-
-.ad-container:hover {
-    box-shadow: 0 0 25px #30eeff;
-}
-
-.ad-container::before {
-    content: "Ad";
-    position: absolute;
-    top: -10px;
-    left: 10px;
-    background-color: #050505;
-    padding: 0 10px;
-    color: #30eeff;
-    font-size: 0.8rem;
-}
-
 #gameContainer {
     position: relative;
     width: 800px;
@@ -181,13 +150,6 @@ canvas {
         margin: 8px 0;
     }
     
-    .ad-container {
-        max-width: 100vw;
-        width: 100%;
-        height: 60px;
-        margin: 5px 0;
-        border-radius: 0;
-    }
     
     #gameContainer {
         max-width: 100vw;

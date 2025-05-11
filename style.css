@@ -22,45 +22,6 @@ body, html {
     scroll-behavior: smooth;
 }
 
-/* Background Animation */
-.animated-bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    overflow: hidden;
-}
-
-.particle {
-    position: absolute;
-    background-color: rgba(124, 77, 255, 0.2);
-    border-radius: 50%;
-    animation: float 15s infinite ease-in-out;
-}
-
-@keyframes float {
-    0% {
-        transform: translateY(0) translateX(0) rotate(0deg);
-        opacity: 0.2;
-    }
-    25% {
-        opacity: 0.3;
-    }
-    50% {
-        transform: translateY(-150px) translateX(100px) rotate(180deg);
-        opacity: 0.2;
-    }
-    75% {
-        opacity: 0.3;
-    }
-    100% {
-        transform: translateY(0) translateX(0) rotate(360deg);
-        opacity: 0.2;
-    }
-}
-
 /* Header Styles */
 header {
     padding: 1.5rem;
@@ -111,47 +72,6 @@ nav {
     }
 }
 
-/* Ad Block Styles */
-.ad-block {
-    background-color: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.9rem;
-    overflow: hidden;
-}
-
-.ad-header {
-    width: 100%;
-    max-width: 728px;
-    height: 90px;
-    margin: 1.5rem auto;
-}
-
-.ad-middle {
-    width: 100%;
-    max-width: 728px;
-    height: 90px;
-    margin: 2rem auto;
-    grid-column: 1 / -1;
-}
-
-.ad-sidebar {
-    width: 100%;
-    max-width: 300px;
-    height: 250px;
-    margin: 1rem auto;
-}
-
-.ad-footer {
-    width: 100%;
-    max-width: 728px;
-    height: 90px;
-    margin: 1rem auto 2rem;
-}
 
 /* Main Content Styles */
 main {
@@ -162,9 +82,12 @@ main {
 
 .games-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.5rem;
-    margin: 2rem 0;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Use auto-fit for better centering */
+    gap: 2rem;
+    margin: 2rem auto; /* Centers the grid container itself */
+    justify-content: center; /* Centers the grid items horizontally */
+    align-items: start; /* Aligns grid items at the top */
+    max-width: 1200px; /* Restrict the grid width */
 }
 
 .game-card {

@@ -45,9 +45,6 @@
         }
       </style>
 <body>
-    <!-- Background Animation -->
-    <div class="animated-bg" id="animated-background"></div>
-
     <!-- Header Section -->
     <header>
         <nav>
@@ -58,22 +55,6 @@
             </div>
         </nav>
     </header>
-
-    <!-- Top Ad Block -->
-    <div class="ad-block ad-header">
-   <!-- horizontal_Ad_Responsive -->
-   <ins class="adsbygoogle"
-        style="display:block"
-        data-ad-client="ca-pub-3017768229951944"
-        data-ad-slot="6356745501"
-        data-ad-format="auto"
-        data-full-width-responsive="true"
-        loading="lazy"></ins>
-   <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-   </script>        
-    </div>
-
     <main>
         <div class="games-grid">
             <!-- Game 1: Tic Tac Toe -->
@@ -107,21 +88,6 @@
                     <p class="game-description">Fill the grid with numbers so each row, column and region contains every number only once.</p>
                     <a href="Games/sudoko.html" class="play-btn"><span class="play-icon">▶️</span> Play Now</a>
                 </div></center>
-            </div>
-
-            <!-- Middle Ad Block -->
-            <div class="ad-block ad-middle">
-           <!-- horizontal_Ad_Responsive -->
-           <ins class="adsbygoogle"
-                style="display:block"
-                data-ad-client="ca-pub-3017768229951944"
-                data-ad-slot="6356745501"
-                data-ad-format="auto"
-                data-full-width-responsive="true"
-                loading="lazy"></ins>
-           <script>
-                (adsbygoogle = window.adsbygoogle || []).push({});
-           </script>                
             </div>
 
             <!-- Game 4: Chess -->
@@ -168,21 +134,6 @@
                 </div></center>
             </div>
 
-            <!-- Sidebar Ad Block -->
-            <div class="ad-block ad-sidebar">
-           <!-- Card_Between_Ad_1 -->
-           <ins class="adsbygoogle"
-                style="display:block"
-                data-ad-client="ca-pub-3017768229951944"
-                data-ad-slot="6064026064"
-                data-ad-format="auto"
-                data-full-width-responsive="true"
-                loading="lazy"></ins>
-           <script>
-                (adsbygoogle = window.adsbygoogle || []).push({});
-           </script>                
-            </div>
-
             <!-- Game 8: Breakout -->
             <div class="game-card">
                 <div class="game-img">🧱</div>
@@ -205,21 +156,6 @@
                 </div></center>
             </div>
 
-            <!-- Sidebar Ad Block -->
-            <div class="ad-block ad-sidebar">
-           <!-- Card_Between_Ad_1 -->
-           <ins class="adsbygoogle"
-                style="display:block"
-                data-ad-client="ca-pub-3017768229951944"
-                data-ad-slot="6064026064"
-                data-ad-format="auto"
-                data-full-width-responsive="true"
-                loading="lazy"></ins>
-           <script>
-                (adsbygoogle = window.adsbygoogle || []).push({});
-           </script>                
-            </div>
-
             <!-- Game 10: Helix Jump -->
             <div class="game-card">
                 <div class="game-img">🌀</div>
@@ -233,21 +169,6 @@
 
         </div>
     </main>
-
-    <!-- Footer Ad Block -->
-    <div class="ad-block ad-footer">
-   <!-- horizontal_Ad_Responsive -->
-   <ins class="adsbygoogle"
-        style="display:block"
-        data-ad-client="ca-pub-3017768229951944"
-        data-ad-slot="6356745501"
-        data-ad-format="auto"
-        data-full-width-responsive="true"
-        loading="lazy"></ins>
-   <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-   </script>        
-    </div>
 
     <!-- Footer Section -->
     <footer>
@@ -272,46 +193,5 @@
             </div>
         </div>
     </footer>
-
-    <script>
-        // Create animated background particles
-        const createParticles = () => {
-            const bg = document.getElementById('animated-background');
-            const numberOfParticles = 15;
-            
-            for (let i = 0; i < numberOfParticles; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                
-                // Random size
-                const size = Math.random() * 50 + 20;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                
-                // Random position
-                particle.style.left = `${Math.random() * 100}vw`;
-                particle.style.top = `${Math.random() * 100}vh`;
-                
-                // Random animation delay
-                particle.style.animationDelay = `${Math.random() * 10}s`;
-                
-                bg.appendChild(particle);
-            }
-        };
-        
-        // Initialize particles on page load
-        document.addEventListener('DOMContentLoaded', createParticles);
-        
-        // Add hover effect to game cards
-        const gameCards = document.querySelectorAll('.game-card');
-        gameCards.forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                card.style.transform = 'scale(1.02)';
-            });
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = 'scale(1)';
-            });
-        });
-    </script>
 </body>
 </html>

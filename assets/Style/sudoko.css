@@ -272,27 +272,6 @@ select {
     height: 1.6rem;
 }
 
-/* Ad Container Styles */
-.ad-container {
-    width: 100%;
-    margin: 20px 0;
-    display: flex;
-    justify-content: center;
-}
-
-.ad-placeholder {
-    background-color: var(--ad-bg);
-    width: 100%;
-    height: 90px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 5px;
-    border: 1px solid var(--border-color);
-    color: #888888;
-    font-size: 0.9rem;
-}
-
 /* Footer Styles */
 footer {
     background: linear-gradient(to right, #2a1956, #372171);
